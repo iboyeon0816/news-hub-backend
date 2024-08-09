@@ -1,15 +1,12 @@
 package com.recommender.newshub.exception;
 
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-@JsonPropertyOrder({"code", "message"})
-public class ErrorResponse {
-
-    private final String code;
+public class CustomException extends RuntimeException {
+    private final HttpStatus status;
     private final String message;
-
 }
