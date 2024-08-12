@@ -9,6 +9,8 @@ import com.recommender.newshub.service.NewsApiService;
 import com.recommender.newshub.web.controller.user.SessionConst;
 import com.recommender.newshub.web.dto.AdminRequestDto.AddNewsDto;
 import com.recommender.newshub.web.dto.AdminResponseDto.AddNewsResultDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
+@Tag(name = "Admin", description = "관리자 권한")
 public class AdminController {
 
     private final NewsApiService newsApiService;
 
     @PostMapping("/news")
+    @Operation(summary = "뉴스 기사 수집 및 저장 API")
     public ApiResponse<AddNewsResultDto> saveNews(@RequestBody AddNewsDto addNewsDto,
                                 HttpServletRequest request) {
         validateAdminAccount(request);
