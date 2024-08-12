@@ -9,6 +9,7 @@ import com.recommender.newshub.web.dto.AdminResponseDto.AddNewsResultDto;
 import com.recommender.newshub.web.dto.NewsApiDto.FetchResultDto;
 import com.recommender.newshub.web.dto.NewsApiDto.FetchResultDto.NewsItem;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,9 @@ public class NewsApiService {
     private final NewsRepository newsRepository;
     private final WebClient webClient;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @Value("${news-api-key}")
+    public String API_KEY;
 
     public NewsApiService(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
