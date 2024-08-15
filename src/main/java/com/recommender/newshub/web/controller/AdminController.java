@@ -7,12 +7,14 @@ import com.recommender.newshub.exception.ex.ForbiddenException;
 import com.recommender.newshub.exception.ex.UnauthenticatedException;
 import com.recommender.newshub.service.NewsApiService;
 import com.recommender.newshub.web.controller.user.SessionConst;
-import com.recommender.newshub.web.dto.AdminRequestDto.AddNewsDto;
+import com.recommender.newshub.web.dto.AdminRequestDto.FetchGeneralNewsDto;
+import com.recommender.newshub.web.dto.AdminRequestDto.FetchTopNewsDto;
 import com.recommender.newshub.web.dto.AdminResponseDto.AddNewsResultDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,12 +31,22 @@ public class AdminController {
     private final NewsApiService newsApiService;
 
     @PostMapping("/news")
-    @Operation(summary = "뉴스 기사 수집 및 저장 API")
-    public ApiResponse<AddNewsResultDto> saveNews(@RequestBody AddNewsDto addNewsDto,
+    @Operation(summary = "일반 뉴스 기사 수집 API")
+    public ApiResponse<AddNewsResultDto> fetchGeneralNews(@Valid @RequestBody FetchGeneralNewsDto fetchGeneralNewsDto,
                                 HttpServletRequest request) {
         validateAdminAccount(request);
 
-        AddNewsResultDto addNewsResultDto = newsApiService.fetchAndSaveNews(addNewsDto.getStartDateTime(), addNewsDto.getEndDateTime());
+        AddNewsResultDto addNewsResultDto = newsApiService.fetchGeneralNews(fetchGeneralNewsDto.getStartDateTime(), fetchGeneralNewsDto.getEndDateTime());
+        return ApiResponse.onSuccess(HttpStatus.OK, addNewsResultDto);
+    }
+
+    @PostMapping("/top-news")
+    @Operation(summary = "주요 뉴스 기사 수집 API")
+    public ApiResponse<AddNewsResultDto> fetchTopNews(@Valid @RequestBody FetchTopNewsDto fetchTopNewsDto,
+                                                  HttpServletRequest request) {
+        validateAdminAccount(request);
+
+        AddNewsResultDto addNewsResultDto = newsApiService.fetchTopNews(fetchTopNewsDto.getDate());
         return ApiResponse.onSuccess(HttpStatus.OK, addNewsResultDto);
     }
 

@@ -2,7 +2,7 @@ package com.recommender.newshub.converter;
 
 import com.recommender.newshub.domain.News;
 import com.recommender.newshub.domain.enums.Category;
-import com.recommender.newshub.web.dto.NewsApiDto.FetchResultDto.NewsItem;
+import com.recommender.newshub.web.dto.NewsApiDto.NewsItem;
 import org.apache.commons.lang3.StringUtils;
 
 public class NewsConverter {
