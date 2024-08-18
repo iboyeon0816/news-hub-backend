@@ -33,6 +33,7 @@ import static com.recommender.newshub.service.newsapi.NewsApiConst.*;
 
 @Slf4j
 @Service
+@Transactional
 public class NewsApiService {
 
     private final NewsRepository newsRepository;
@@ -47,7 +48,6 @@ public class NewsApiService {
         this.webClient = getWebClient();
     }
 
-    @Transactional
     public AddNewsResultDto fetchGeneralNews(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         SearchResultDto searchResultDto = callNewsApi(buildSearchNewsUri(startDateTime, endDateTime), SearchResultDto.class);
 
@@ -55,7 +55,6 @@ public class NewsApiService {
         return new AddNewsResultDto(searchResultDto.getAvailable(), savedNewsNumber);
     }
 
-    @Transactional
     public AddNewsResultDto fetchTopNews(LocalDate date) {
         TopResultDto topResultDto = callNewsApi(buildTopNewsUri(date), TopResultDto.class);
 

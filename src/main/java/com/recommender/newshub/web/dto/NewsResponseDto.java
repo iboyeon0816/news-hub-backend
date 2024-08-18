@@ -1,0 +1,31 @@
+package com.recommender.newshub.web.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+public class NewsResponseDto {
+
+    @Getter
+    @AllArgsConstructor
+    public static class GetNewsResultDto {
+        private Integer number;
+        private List<NewsDto> news;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class NewsDto {
+        private LocalDateTime publishDate;
+        private String author;
+        private String imageUrl;
+        private String summary;
+        private String title;
+        private String url;
+        private String category;
+    }
+}
