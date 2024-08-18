@@ -11,8 +11,20 @@ public class NewsResponseDto {
 
     @Getter
     @AllArgsConstructor
-    public static class GetNewsResultDto {
+    public static class GetTopNewsResultDto {
         private Integer number;
+        private List<NewsDto> news;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class GetSearchNewsResultDto {
+        private Boolean isFirst;
+        private Boolean isLast;
+        private Integer number;
+        private Integer totalPages;
+        private Long totalElements;
         private List<NewsDto> news;
     }
 
