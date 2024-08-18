@@ -19,7 +19,7 @@ public class NewsResponseDto {
     @Getter
     @Builder
     @AllArgsConstructor
-    public static class GetSearchNewsResultDto {
+    public static class GetNewsResultDto {
         private Boolean isFirst;
         private Boolean isLast;
         private Integer number;

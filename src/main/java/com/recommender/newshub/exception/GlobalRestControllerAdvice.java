@@ -5,6 +5,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -33,6 +34,13 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         Map<String, String> errors = extractFieldErrors(ex);
         return handleExceptionInternal(ex, headers, HttpStatus.BAD_REQUEST, request, errors);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleTypeMismatch(TypeMismatchException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        Object[] args = {ex.getPropertyName(), ex.getValue()};
+        String defaultDetail = "Failed to convert '" + args[0] + "' with value: '" + args[1] + "'";
+        return handleExceptionInternal(ex, headers, HttpStatus.BAD_REQUEST, request, defaultDetail);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

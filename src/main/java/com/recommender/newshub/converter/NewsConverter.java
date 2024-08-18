@@ -3,7 +3,7 @@ package com.recommender.newshub.converter;
 import com.recommender.newshub.domain.News;
 import com.recommender.newshub.domain.enums.Category;
 import com.recommender.newshub.web.dto.NewsApiDto.NewsItem;
-import com.recommender.newshub.web.dto.NewsResponseDto.GetSearchNewsResultDto;
+import com.recommender.newshub.web.dto.NewsResponseDto.GetNewsResultDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetTopNewsResultDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.NewsDto;
 import org.apache.commons.lang3.StringUtils;
@@ -34,12 +34,12 @@ public class NewsConverter {
         return new GetTopNewsResultDto(newsDtoList.size(), newsDtoList);
     }
 
-    public static GetSearchNewsResultDto toGetSearchNewsResultDto(Page<News> newsPage) {
+    public static GetNewsResultDto toGetNewsResultDto(Page<News> newsPage) {
         List<NewsDto> newsDtoList = newsPage.getContent().stream()
                 .map(NewsConverter::toNewsDto)
                 .toList();
 
-        return GetSearchNewsResultDto.builder()
+        return GetNewsResultDto.builder()
                 .isFirst(newsPage.isFirst())
                 .isLast(newsPage.isLast())
                 .number(newsDtoList.size())

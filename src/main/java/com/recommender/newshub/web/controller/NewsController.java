@@ -4,8 +4,9 @@ import com.recommender.newshub.apipayload.ApiResponse;
 import com.recommender.newshub.argument.PageCheck;
 import com.recommender.newshub.converter.NewsConverter;
 import com.recommender.newshub.domain.News;
+import com.recommender.newshub.domain.enums.Category;
 import com.recommender.newshub.service.NewsService;
-import com.recommender.newshub.web.dto.NewsResponseDto.GetSearchNewsResultDto;
+import com.recommender.newshub.web.dto.NewsResponseDto.GetNewsResultDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetTopNewsResultDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,9 +37,17 @@ public class NewsController {
 
     @GetMapping("/search")
     @Operation(summary = "키워드 검색 뉴스 기사 조회 API")
-    public ApiResponse<GetSearchNewsResultDto> getSearchNews(@RequestParam String keyword,
-                                                             @PageCheck Integer page) {
+    public ApiResponse<GetNewsResultDto> getSearchNews(@RequestParam String keyword,
+                                                       @PageCheck Integer page) {
         Page<News> searchNews = newsService.getSearchNews(keyword, page);
-        return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetSearchNewsResultDto(searchNews));
+        return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetNewsResultDto(searchNews));
+    }
+
+    @GetMapping
+    @Operation(summary = "카테고리 뉴스 기사 조회 API")
+    public ApiResponse<GetNewsResultDto> getCategoryNews(@RequestParam Category category,
+                                                         @PageCheck Integer page) {
+        Page<News> categoryNews = newsService.getCategoryNews(category, page);
+        return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetNewsResultDto(categoryNews));
     }
 }
