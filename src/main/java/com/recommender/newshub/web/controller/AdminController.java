@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/news")
 @RequiredArgsConstructor
 @Tag(name = "Admin", description = "관리자 권한")
 public class AdminController {
 
     private final NewsApiService newsApiService;
 
-    @PostMapping("/news")
+    @PostMapping
     @Operation(summary = "일반 뉴스 기사 수집 API")
     public ApiResponse<AddNewsResultDto> fetchGeneralNews(@Valid @RequestBody FetchGeneralNewsDto fetchGeneralNewsDto,
                                 HttpServletRequest request) {
@@ -40,7 +40,7 @@ public class AdminController {
         return ApiResponse.onSuccess(HttpStatus.OK, addNewsResultDto);
     }
 
-    @PostMapping("/top-news")
+    @PostMapping("/top")
     @Operation(summary = "주요 뉴스 기사 수집 API")
     public ApiResponse<AddNewsResultDto> fetchTopNews(@Valid @RequestBody FetchTopNewsDto fetchTopNewsDto,
                                                   HttpServletRequest request) {
