@@ -51,6 +51,7 @@ public class NewsConverter {
 
     public static NewsDto toNewsDto(News news) {
         return NewsDto.builder()
+                .id(news.getId())
                 .title(news.getTitle())
                 .summary(news.getSummary())
                 .url(news.getUrl())

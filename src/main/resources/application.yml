@@ -23,3 +23,7 @@ server:
   servlet:
     session:
       tracking-modes: cookie
+scheduler:
+  use: false
+  general-cron: 0 0 0/1 * * ?
+  top-cron: 0 0 12 * * ?

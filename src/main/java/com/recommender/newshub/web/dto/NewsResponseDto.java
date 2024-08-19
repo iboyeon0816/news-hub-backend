@@ -32,6 +32,7 @@ public class NewsResponseDto {
     @Builder
     @AllArgsConstructor
     public static class NewsDto {
+        private Long id;
         private LocalDateTime publishDate;
         private String author;
         private String imageUrl;
