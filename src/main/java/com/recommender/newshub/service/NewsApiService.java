@@ -3,15 +3,13 @@ package com.recommender.newshub.service;
 import com.recommender.newshub.converter.NewsConverter;
 import com.recommender.newshub.domain.News;
 import com.recommender.newshub.exception.ex.ApiFetchException;
-import com.recommender.newshub.exception.ex.DatabaseException;
 import com.recommender.newshub.repository.NewsRepository;
 import com.recommender.newshub.web.dto.AdminResponseDto.AddNewsResultDto;
-import com.recommender.newshub.web.dto.NewsApiDto.NewsItem;
-import com.recommender.newshub.web.dto.NewsApiDto.SearchResultDto;
-import com.recommender.newshub.web.dto.NewsApiDto.TopResultDto;
+import com.recommender.newshub.web.dto.NewsApiDto.NewsDetailDto;
+import com.recommender.newshub.web.dto.NewsApiDto.SearchNewsResultDto;
+import com.recommender.newshub.web.dto.NewsApiDto.TopNewsResultDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +17,6 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
@@ -27,6 +24,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.recommender.newshub.service.newsapi.NewsApiConst.*;
@@ -49,23 +47,26 @@ public class NewsApiService {
     }
 
     public AddNewsResultDto fetchGeneralNews(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        SearchResultDto searchResultDto = callNewsApi(buildSearchNewsUri(startDateTime, endDateTime), SearchResultDto.class);
+        String uri = buildSearchNewsUri(startDateTime, endDateTime);
+        SearchNewsResultDto fetchResult = callNewsApi(uri, SearchNewsResultDto.class);
 
-        int savedNewsNumber = saveNews(searchResultDto.getNews());
-        return new AddNewsResultDto(searchResultDto.getAvailable(), savedNewsNumber);
+        List<News> savedNews = saveNews(fetchResult.getNewsDetailDtos(), false);
+        return new AddNewsResultDto(fetchResult.getAvailable(), savedNews.size());
     }
 
     public AddNewsResultDto fetchTopNews(LocalDate date) {
-        TopResultDto topResultDto = callNewsApi(buildTopNewsUri(date), TopResultDto.class);
+        String uri = buildTopNewsUri(date);
+        TopNewsResultDto topNewsResultDto = callNewsApi(uri, TopNewsResultDto.class);
 
-        List<NewsItem> allNews = topResultDto.getAllNews();
-        allNews.forEach(NewsItem::setTopNews);
+        List<NewsDetailDto> newsDetailDtos = new ArrayList<>();
+        topNewsResultDto.getTopNewsDtos()
+                        .forEach(topNewsDtos -> newsDetailDtos.addAll(topNewsDtos.getNewsDetailDtos()));
 
-        int savedNewsNumber = saveNews(allNews);
-        return new AddNewsResultDto(allNews.size(), savedNewsNumber);
+        List<News> savedNews = saveNews(newsDetailDtos, true);
+        return new AddNewsResultDto(newsDetailDtos.size(), savedNews.size());
     }
 
-    public <T> T callNewsApi(String uri, Class<T> responseType) {
+    private <T> T callNewsApi(String uri, Class<T> responseType) {
         return webClient.get()
                 .uri(uri)
                 .headers(headers -> headers.set("x-api-key", API_KEY))
@@ -77,48 +78,18 @@ public class NewsApiService {
                 .block();
     }
 
-    private int saveNews(List<NewsItem> newsItem) {
-        try {
-            List<News> newsList = newsItem.stream()
-                    .filter(this::validateNewsItem)
-                    .map(NewsConverter::toNews)
-                    .toList();
-
-            List<News> savedNewsList = newsRepository.saveAll(newsList);
-            return savedNewsList.size();
-        } catch (DataAccessException ex) {
-            log.error("DB saving error: {}", ex.getMessage());
-            throw new DatabaseException(ex.getMessage());
-        }
+    private List<News> saveNews(List<NewsDetailDto> newsDetailDtos, Boolean isTopNews) {
+        List<News> news = newsDetailDtos.stream()
+                .filter(this::validateNewsDetailDto)
+                .map(newsDetailDto -> NewsConverter.toNews(newsDetailDto, isTopNews))
+                .toList();
+        return newsRepository.saveAll(news);
     }
 
-    private boolean validateNewsItem(NewsItem newsItem) {
-        return newsItem.getId() != null
-                && newsItem.getTitle() != null
-                && newsItem.getUrl() != null;
-    }
-
-    private String buildSearchNewsUri(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return UriComponentsBuilder.fromPath(SEARCH_NEWS_PATH)
-                .queryParam("language", ENGLISH)
-                .queryParam("news-sources", String.join(",", NEWS_SOURCES))
-                .queryParam("earliest-publish-date", startDateTime.format(formatter))
-                .queryParam("latest-publish-date", endDateTime.format(formatter))
-                .queryParam("categories", String.join(",", CATEGORIES))
-                .queryParam("offset", 0)
-                .queryParam("number", 100)
-                .build()
-                .toUriString();
-    }
-
-    private String buildTopNewsUri(LocalDate date) {
-        return UriComponentsBuilder.fromPath(TOP_NEWS_PATH)
-                .queryParam("source-country", USA)
-                .queryParam("language", ENGLISH)
-                .queryParam("date", date.toString())
-                .queryParam("headlines-only", Boolean.FALSE.toString())
-                .build()
-                .toUriString();
+    private boolean validateNewsDetailDto(NewsDetailDto newsDetailDto) {
+        return newsDetailDto.getId() != null
+                && newsDetailDto.getTitle() != null
+                && newsDetailDto.getUrl() != null;
     }
 
     private static WebClient getWebClient() {
@@ -130,10 +101,23 @@ public class NewsApiService {
                 .build();
     }
 
+    private String buildSearchNewsUri(LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        return SEARCH_NEWS_URI_COMPONENT
+                .queryParam("earliest-publish-date", startDateTime.format(formatter))
+                .queryParam("latest-publish-date", endDateTime.format(formatter))
+                .build().toUriString();
+    }
+
+    private String buildTopNewsUri(LocalDate date) {
+        return TOP_NEWS_URI_COMPONENT
+                .queryParam("date", date.toString())
+                .build().toUriString();
+    }
+
     private Mono<Throwable> handleFetchError(ClientResponse clientResponse) {
         return clientResponse.bodyToMono(String.class)
                 .flatMap(responseBody -> {
-                    log.error("News api fetch error: {}", responseBody);
+                    log.error("[NewsApi] fetch error: {}", responseBody);
                     return Mono.error(new ApiFetchException(responseBody));
                 });
     }

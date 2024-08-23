@@ -1,5 +1,7 @@
 package com.recommender.newshub.service.newsapi;
 
+import org.springframework.web.util.UriComponentsBuilder;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,4 +21,14 @@ public class NewsApiConst {
             "entertainment", "health", "science", "lifestyle",
             "travel", "culture", "education", "environment"
     );
+    public static final UriComponentsBuilder SEARCH_NEWS_URI_COMPONENT = UriComponentsBuilder.fromPath(SEARCH_NEWS_PATH)
+            .queryParam("language", ENGLISH)
+            .queryParam("news-sources", String.join(",", NEWS_SOURCES))
+            .queryParam("categories", String.join(",", CATEGORIES))
+            .queryParam("offset", 0)
+            .queryParam("number", 100);
+    public static final UriComponentsBuilder TOP_NEWS_URI_COMPONENT = UriComponentsBuilder.fromPath(TOP_NEWS_PATH)
+            .queryParam("source-country", USA)
+            .queryParam("language", ENGLISH)
+            .queryParam("headlines-only", Boolean.FALSE.toString());
 }

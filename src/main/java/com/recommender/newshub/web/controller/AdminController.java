@@ -2,7 +2,7 @@ package com.recommender.newshub.web.controller;
 
 import com.recommender.newshub.apipayload.ApiResponse;
 import com.recommender.newshub.domain.User;
-import com.recommender.newshub.domain.enums.Role;
+import com.recommender.newshub.domain.enums.UserRole;
 import com.recommender.newshub.exception.ex.ForbiddenException;
 import com.recommender.newshub.exception.ex.UnauthenticatedException;
 import com.recommender.newshub.service.NewsApiService;
@@ -61,7 +61,7 @@ public class AdminController {
             throw new UnauthenticatedException("User not authenticated");
         }
 
-        if (!Role.ROLE_ADMIN.equals(user.getRole())) {
+        if (!UserRole.ROLE_ADMIN.equals(user.getUserRole())) {
             throw new ForbiddenException("Access denied");
         }
     }

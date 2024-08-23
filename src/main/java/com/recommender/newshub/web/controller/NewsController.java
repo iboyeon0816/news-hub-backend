@@ -4,8 +4,8 @@ import com.recommender.newshub.apipayload.ApiResponse;
 import com.recommender.newshub.argument.PageCheck;
 import com.recommender.newshub.converter.NewsConverter;
 import com.recommender.newshub.domain.News;
-import com.recommender.newshub.domain.enums.Category;
-import com.recommender.newshub.service.NewsService;
+import com.recommender.newshub.domain.enums.NewsCategory;
+import com.recommender.newshub.service.NewsQueryService;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetNewsResultDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetTopNewsResultDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,12 +26,12 @@ import java.util.List;
 @Tag(name = "News", description = "뉴스 기사 조회")
 public class NewsController {
 
-    private final NewsService newsService;
+    private final NewsQueryService newsQueryService;
 
     @GetMapping("/top")
     @Operation(summary = "주요 뉴스 기사 조회 API")
     public ApiResponse<GetTopNewsResultDto> getTopNews() {
-        List<News> topNewsList = newsService.getTopNews();
+        List<News> topNewsList = newsQueryService.getTopNews();
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetTopNewsResultDto(topNewsList));
     }
 
@@ -39,15 +39,15 @@ public class NewsController {
     @Operation(summary = "키워드 검색 뉴스 기사 조회 API")
     public ApiResponse<GetNewsResultDto> getSearchNews(@RequestParam String keyword,
                                                        @PageCheck Integer page) {
-        Page<News> searchNews = newsService.getSearchNews(keyword, page);
+        Page<News> searchNews = newsQueryService.getSearchNews(keyword, page);
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetNewsResultDto(searchNews));
     }
 
     @GetMapping
     @Operation(summary = "카테고리 뉴스 기사 조회 API")
-    public ApiResponse<GetNewsResultDto> getCategoryNews(@RequestParam Category category,
+    public ApiResponse<GetNewsResultDto> getCategoryNews(@RequestParam NewsCategory newsCategory,
                                                          @PageCheck Integer page) {
-        Page<News> categoryNews = newsService.getCategoryNews(category, page);
+        Page<News> categoryNews = newsQueryService.getCategoryNews(newsCategory, page);
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetNewsResultDto(categoryNews));
     }
 }

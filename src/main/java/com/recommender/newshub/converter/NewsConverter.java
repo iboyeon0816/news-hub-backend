@@ -1,8 +1,8 @@
 package com.recommender.newshub.converter;
 
 import com.recommender.newshub.domain.News;
-import com.recommender.newshub.domain.enums.Category;
-import com.recommender.newshub.web.dto.NewsApiDto.NewsItem;
+import com.recommender.newshub.domain.enums.NewsCategory;
+import com.recommender.newshub.web.dto.NewsApiDto.NewsDetailDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetNewsResultDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetTopNewsResultDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.NewsDto;
@@ -13,16 +13,20 @@ import java.util.List;
 
 public class NewsConverter {
 
-    public static News toNews(NewsItem newsItem) {
+    public static News toNews(NewsDetailDto newsDetailDto, Boolean isTopNews) {
+        NewsCategory category = newsDetailDto.getCategory() == null ?
+                NewsCategory.UNKNOWN : NewsCategory.valueOf(StringUtils.upperCase(newsDetailDto.getCategory()));
+
         return News.builder()
-                .id(newsItem.getId())
-                .title(newsItem.getTitle())
-                .summary(newsItem.getSummary())
-                .url(newsItem.getUrl())
-                .imageUrl(newsItem.getImage())
-                .publishDate(newsItem.getPublishDate())
-                .author(newsItem.getAuthor())
-                .category(Category.valueOf(StringUtils.upperCase(newsItem.getCategory())))
+                .id(newsDetailDto.getId())
+                .title(newsDetailDto.getTitle())
+                .summary(newsDetailDto.getSummary())
+                .author(newsDetailDto.getAuthor())
+                .url(newsDetailDto.getUrl())
+                .imageUrl(newsDetailDto.getImage())
+                .isTopNews(isTopNews)
+                .publishDate(newsDetailDto.getPublishDate())
+                .newsCategory(category)
                 .build();
     }
 
@@ -58,7 +62,7 @@ public class NewsConverter {
                 .imageUrl(news.getImageUrl())
                 .publishDate(news.getPublishDate())
                 .author(news.getAuthor())
-                .category(news.getCategory().toString())
+                .category(news.getNewsCategory().toString())
                 .build();
     }
 }

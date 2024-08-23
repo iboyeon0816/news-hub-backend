@@ -1,6 +1,6 @@
 package com.recommender.newshub.domain;
 
-import com.recommender.newshub.domain.enums.Role;
+import com.recommender.newshub.domain.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,11 +23,11 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private UserRole userRole;
 
     public User(String loginId, String password) {
         this.loginId = loginId;
         this.password = password;
-        this.role = Role.ROLE_USER;
+        this.userRole = UserRole.ROLE_USER;
     }
 }

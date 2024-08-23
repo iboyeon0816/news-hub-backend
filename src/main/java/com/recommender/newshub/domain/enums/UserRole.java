@@ -1,5 +1,5 @@
 package com.recommender.newshub.domain.enums;
 
-public enum Role {
+public enum UserRole {
     ROLE_USER, ROLE_ADMIN
 }

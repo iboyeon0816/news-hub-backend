@@ -6,42 +6,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 public class NewsApiDto {
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class SearchResultDto {
-        private int offset;
+    public static class SearchNewsResultDto {
         private int number;
         private int available;
-        private List<NewsItem> news;
+        @JsonProperty("news")
+        private List<NewsDetailDto> newsDetailDtos;
     }
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class TopResultDto {
+    public static class TopNewsResultDto {
         @JsonProperty("top_news")
-        private List<TopNewsItem> topNews;
+        private List<TopNewsDtos> topNewsDtos;
 
         @Getter
         @JsonIgnoreProperties(ignoreUnknown = true)
-        public static class TopNewsItem {
-            private List<NewsItem> news;
-        }
-
-        public List<NewsItem> getAllNews() {
-            List<NewsItem> allNews = new ArrayList<>();
-            topNews.forEach(topNewsItem -> allNews.addAll(topNewsItem.getNews()));
-            return allNews;
+        public static class TopNewsDtos {
+            @JsonProperty("news")
+            private List<NewsDetailDto> newsDetailDtos;
         }
     }
 
     @Getter
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class NewsItem {
+    public static class NewsDetailDto {
         private Long id;
         private String title;
         private String summary;
@@ -53,9 +47,5 @@ public class NewsApiDto {
         private String author;
         @JsonProperty("catgory")
         private String category;
-
-        public void setTopNews() {
-            this.category = "TOP_NEWS";
-        }
     }
 }

@@ -1,7 +1,7 @@
 package com.recommender.newshub.service;
 
 import com.recommender.newshub.domain.News;
-import com.recommender.newshub.domain.enums.Category;
+import com.recommender.newshub.domain.enums.NewsCategory;
 import com.recommender.newshub.repository.NewsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,7 +14,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class NewsService {
+public class NewsQueryService {
 
     private final NewsRepository newsRepository;
 
@@ -28,7 +28,7 @@ public class NewsService {
         return newsRepository.findByTitleContaining(keyword, PageRequest.of(page, DEFAULT_SIZE));
     }
 
-    public Page<News> getCategoryNews(Category category, Integer page) {
-        return newsRepository.findByCategory(category, PageRequest.of(page, DEFAULT_SIZE));
+    public Page<News> getCategoryNews(NewsCategory newsCategory, Integer page) {
+        return newsRepository.findByCategory(newsCategory, PageRequest.of(page, DEFAULT_SIZE));
     }
 }

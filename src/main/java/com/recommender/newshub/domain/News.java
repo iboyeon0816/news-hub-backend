@@ -1,6 +1,6 @@
 package com.recommender.newshub.domain;
 
-import com.recommender.newshub.domain.enums.Category;
+import com.recommender.newshub.domain.enums.NewsCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,16 +22,18 @@ public class News {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
+    private String author;
+
     @Column(nullable = false)
     private String url;
 
     private String imageUrl;
 
-    private LocalDateTime publishDate;
+    private Boolean isTopNews;
 
-    private String author;
+    private LocalDateTime publishDate;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Category category;
+    private NewsCategory newsCategory;
 }
