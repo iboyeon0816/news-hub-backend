@@ -29,7 +29,7 @@ public class NewsController {
     private final NewsQueryService newsQueryService;
 
     @GetMapping("/top")
-    @Operation(summary = "주요 뉴스 기사 조회 API")
+    @Operation(summary = "카테고리별 주요 뉴스 기사 조회 API")
     public ApiResponse<GetTopNewsResultDto> getTopNews() {
         List<News> topNewsList = newsQueryService.getTopNews();
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetTopNewsResultDto(topNewsList));
@@ -44,10 +44,10 @@ public class NewsController {
     }
 
     @GetMapping
-    @Operation(summary = "카테고리 뉴스 기사 조회 API")
-    public ApiResponse<GetNewsResultDto> getCategoryNews(@RequestParam NewsCategory newsCategory,
+    @Operation(summary = "카테고리별 최신 뉴스 기사 조회 API")
+    public ApiResponse<GetNewsResultDto> getCategoryNews(@RequestParam NewsCategory category,
                                                          @PageCheck Integer page) {
-        Page<News> categoryNews = newsQueryService.getCategoryNews(newsCategory, page);
+        Page<News> categoryNews = newsQueryService.getCategoryNews(category, page);
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetNewsResultDto(categoryNews));
     }
 }

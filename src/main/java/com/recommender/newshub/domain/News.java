@@ -22,6 +22,7 @@ public class News {
     @Column(columnDefinition = "TEXT")
     private String summary;
 
+    @Column(length = 750)
     private String author;
 
     @Column(nullable = false)

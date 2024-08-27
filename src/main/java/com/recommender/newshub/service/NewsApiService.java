@@ -17,6 +17,7 @@ import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 import reactor.util.retry.Retry;
 
@@ -102,14 +103,22 @@ public class NewsApiService {
     }
 
     private String buildSearchNewsUri(LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        return SEARCH_NEWS_URI_COMPONENT
+        return UriComponentsBuilder.fromPath(SEARCH_NEWS_PATH)
+                .queryParam("language", ENGLISH)
+                .queryParam("news-sources", String.join(",", NEWS_SOURCES))
+                .queryParam("categories", String.join(",", CATEGORIES))
+                .queryParam("offset", 0)
+                .queryParam("number", 100)
                 .queryParam("earliest-publish-date", startDateTime.format(formatter))
                 .queryParam("latest-publish-date", endDateTime.format(formatter))
                 .build().toUriString();
     }
 
     private String buildTopNewsUri(LocalDate date) {
-        return TOP_NEWS_URI_COMPONENT
+        return UriComponentsBuilder.fromPath(TOP_NEWS_PATH)
+                .queryParam("source-country", USA)
+                .queryParam("language", ENGLISH)
+                .queryParam("headlines-only", Boolean.FALSE.toString())
                 .queryParam("date", date.toString())
                 .build().toUriString();
     }
