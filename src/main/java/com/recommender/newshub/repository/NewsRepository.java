@@ -11,12 +11,12 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface NewsRepository extends JpaRepository<News, Long> {
-    @Query("SELECT n FROM News n WHERE n.isTopNews = true ORDER BY n.publishDate DESC")
-    List<News> findTopNews(Pageable pageable);
+    @Query("SELECT n FROM News n WHERE n.isTopNews = true AND n.newsCategory IN :categories ORDER BY n.publishDate DESC")
+    List<News> findTopNewsByCategories(@Param("categories") List<NewsCategory> categories, Pageable pageable);
 
     @Query("SELECT n FROM News n WHERE LOWER(n.title) LIKE LOWER(CONCAT('%', :keyword, '%')) ORDER BY n.publishDate DESC")
     Page<News> findByTitleContaining(@Param("keyword") String keyword, Pageable pageable);
 
-    @Query("SELECT n FROM News n WHERE n.newsCategory = :category ORDER BY n.publishDate DESC" )
-    Page<News> findByCategory(@Param("category") NewsCategory category, Pageable pageable);
+    @Query("SELECT n FROM News n WHERE n.newsCategory IN :categories ORDER BY n.publishDate DESC" )
+    Page<News> findByCategories(@Param("categories") List<NewsCategory> categories, Pageable pageable);
 }

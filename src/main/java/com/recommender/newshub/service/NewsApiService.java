@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.recommender.newshub.service.newsapi.NewsApiConst.*;
+import static com.recommender.newshub.constants.NewsApiConst.*;
 
 @Slf4j
 @Service

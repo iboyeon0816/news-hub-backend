@@ -1,4 +1,4 @@
-package com.recommender.newshub.service.newsapi;
+package com.recommender.newshub.constants;
 
 import java.util.Arrays;
 import java.util.List;

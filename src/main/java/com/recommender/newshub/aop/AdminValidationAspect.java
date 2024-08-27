@@ -4,7 +4,7 @@ import com.recommender.newshub.domain.User;
 import com.recommender.newshub.domain.enums.UserRole;
 import com.recommender.newshub.exception.ex.ForbiddenException;
 import com.recommender.newshub.exception.ex.UnauthenticatedException;
-import com.recommender.newshub.web.controller.user.SessionConst;
+import com.recommender.newshub.constants.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.aspectj.lang.annotation.Aspect;

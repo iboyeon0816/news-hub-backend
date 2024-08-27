@@ -1,13 +1,13 @@
 package com.recommender.newshub.web.controller;
 
-import com.recommender.newshub.apipayload.ApiResponse;
-import com.recommender.newshub.argument.PageCheck;
 import com.recommender.newshub.converter.NewsConverter;
 import com.recommender.newshub.domain.News;
-import com.recommender.newshub.domain.enums.NewsCategory;
+import com.recommender.newshub.resolver.PageCheck;
 import com.recommender.newshub.service.NewsQueryService;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetNewsResultDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetTopNewsResultDto;
+import com.recommender.newshub.web.dto.common.ApiResponse;
+import com.recommender.newshub.web.dto.enums.ControllerNewsCategory;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +30,8 @@ public class NewsController {
 
     @GetMapping("/top")
     @Operation(summary = "카테고리별 주요 뉴스 기사 조회 API")
-    public ApiResponse<GetTopNewsResultDto> getTopNews() {
-        List<News> topNewsList = newsQueryService.getTopNews();
+    public ApiResponse<GetTopNewsResultDto> getTopNews(@RequestParam ControllerNewsCategory category) {
+        List<News> topNewsList = newsQueryService.getTopNews(category);
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetTopNewsResultDto(topNewsList));
     }
 
@@ -45,7 +45,7 @@ public class NewsController {
 
     @GetMapping
     @Operation(summary = "카테고리별 최신 뉴스 기사 조회 API")
-    public ApiResponse<GetNewsResultDto> getCategoryNews(@RequestParam NewsCategory category,
+    public ApiResponse<GetNewsResultDto> getCategoryNews(@RequestParam ControllerNewsCategory category,
                                                          @PageCheck Integer page) {
         Page<News> categoryNews = newsQueryService.getCategoryNews(category, page);
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetNewsResultDto(categoryNews));

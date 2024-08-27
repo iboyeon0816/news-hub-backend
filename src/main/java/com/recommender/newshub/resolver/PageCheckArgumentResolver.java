@@ -1,4 +1,4 @@
-package com.recommender.newshub.argument;
+package com.recommender.newshub.resolver;
 
 import com.recommender.newshub.exception.ex.PageException;
 import org.springframework.core.MethodParameter;

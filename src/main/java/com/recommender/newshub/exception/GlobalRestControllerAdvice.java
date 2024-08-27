@@ -1,6 +1,6 @@
 package com.recommender.newshub.exception;
 
-import com.recommender.newshub.apipayload.ApiResponse;
+import com.recommender.newshub.web.dto.common.ApiResponse;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

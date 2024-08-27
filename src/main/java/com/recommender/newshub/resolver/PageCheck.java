@@ -1,4 +1,4 @@
-package com.recommender.newshub.argument;
+package com.recommender.newshub.resolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

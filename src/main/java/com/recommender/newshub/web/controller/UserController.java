@@ -1,10 +1,10 @@
 package com.recommender.newshub.web.controller;
 
-import com.recommender.newshub.apipayload.ApiResponse;
+import com.recommender.newshub.web.dto.common.ApiResponse;
 import com.recommender.newshub.converter.UserConverter;
 import com.recommender.newshub.domain.User;
 import com.recommender.newshub.service.UserService;
-import com.recommender.newshub.web.controller.user.SessionConst;
+import com.recommender.newshub.constants.SessionConst;
 import com.recommender.newshub.web.dto.UserRequestDto.LoginDto;
 import com.recommender.newshub.web.dto.UserRequestDto.SignUpDto;
 import io.swagger.v3.oas.annotations.Operation;

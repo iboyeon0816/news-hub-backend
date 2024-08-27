@@ -1,4 +1,4 @@
-package com.recommender.newshub.apipayload;
+package com.recommender.newshub.web.dto.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

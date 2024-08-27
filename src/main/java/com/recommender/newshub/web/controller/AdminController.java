@@ -1,6 +1,6 @@
 package com.recommender.newshub.web.controller;
 
-import com.recommender.newshub.apipayload.ApiResponse;
+import com.recommender.newshub.web.dto.common.ApiResponse;
 import com.recommender.newshub.service.NewsApiService;
 import com.recommender.newshub.web.dto.AdminRequestDto.FetchGeneralNewsDto;
 import com.recommender.newshub.web.dto.AdminRequestDto.FetchTopNewsDto;

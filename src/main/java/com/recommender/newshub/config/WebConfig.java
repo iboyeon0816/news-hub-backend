@@ -1,6 +1,6 @@
 package com.recommender.newshub.config;
 
-import com.recommender.newshub.argument.PageCheckArgumentResolver;
+import com.recommender.newshub.resolver.PageCheckArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
