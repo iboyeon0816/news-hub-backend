@@ -47,6 +47,8 @@ public class NewsQueryService {
 
         if (category.equals(ControllerNewsCategory.ETC)) {
             categories = ETC_CATEGORIES;
+        } else if (category.equals(ControllerNewsCategory.ALL)) {
+            categories = List.of(NewsCategory.values());
         } else {
             categories = List.of(NewsCategory.valueOf(category.name()));
         }
