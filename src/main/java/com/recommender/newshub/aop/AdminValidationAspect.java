@@ -27,7 +27,7 @@ public class AdminValidationAspect {
             throw new UnauthenticatedException("User not authenticated");
         }
 
-        if (!UserRole.ROLE_ADMIN.equals(user.getUserRole())) {
+        if (!UserRole.ROLE_ADMIN.equals(user.getRole())) {
             throw new ForbiddenException("Access denied");
         }
     }

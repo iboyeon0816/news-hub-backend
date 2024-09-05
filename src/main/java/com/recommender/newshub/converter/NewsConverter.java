@@ -26,7 +26,7 @@ public class NewsConverter {
                 .imageUrl(newsDetailDto.getImage())
                 .isTopNews(isTopNews)
                 .publishDate(newsDetailDto.getPublishDate())
-                .newsCategory(category)
+                .category(category)
                 .build();
     }
 
@@ -62,7 +62,7 @@ public class NewsConverter {
                 .imageUrl(news.getImageUrl())
                 .publishDate(news.getPublishDate())
                 .author(news.getAuthor())
-                .category(news.getNewsCategory().toString())
+                .category(news.getCategory().toString())
                 .build();
     }
 }

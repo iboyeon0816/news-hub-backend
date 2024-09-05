@@ -23,11 +23,11 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole userRole;
+    private UserRole role;
 
     public User(String loginId, String password) {
         this.loginId = loginId;
         this.password = password;
-        this.userRole = UserRole.ROLE_USER;
+        this.role = UserRole.ROLE_USER;
     }
 }

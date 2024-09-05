@@ -36,5 +36,5 @@ public class News {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private NewsCategory newsCategory;
+    private NewsCategory category;
 }
