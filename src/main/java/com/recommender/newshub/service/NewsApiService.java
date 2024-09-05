@@ -61,7 +61,7 @@ public class NewsApiService {
 
         List<NewsDetailDto> newsDetailDtos = new ArrayList<>();
         topNewsResultDto.getTopNewsDtos()
-                        .forEach(topNewsDtos -> newsDetailDtos.addAll(topNewsDtos.getNewsDetailDtos()));
+                        .forEach(topNewsDtos -> newsDetailDtos.add(topNewsDtos.getNewsDetailDtos().get(0)));
 
         List<News> savedNews = saveNews(newsDetailDtos, true);
         return new AddNewsResultDto(newsDetailDtos.size(), savedNews.size());
