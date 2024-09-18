@@ -11,7 +11,7 @@ public class NewsResponseDto {
 
     @Getter
     @AllArgsConstructor
-    public static class GetTopNewsResultDto {
+    public static class GetFixedNewsResultDto {
         private Integer number;
         private List<NewsDto> news;
     }

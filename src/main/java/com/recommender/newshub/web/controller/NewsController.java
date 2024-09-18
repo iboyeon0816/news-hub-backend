@@ -1,11 +1,14 @@
 package com.recommender.newshub.web.controller;
 
+import com.recommender.newshub.constants.SessionConst;
 import com.recommender.newshub.converter.NewsConverter;
 import com.recommender.newshub.domain.News;
+import com.recommender.newshub.domain.User;
 import com.recommender.newshub.resolver.PageCheck;
 import com.recommender.newshub.service.NewsQueryService;
+import com.recommender.newshub.service.RecommenderService;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetNewsResultDto;
-import com.recommender.newshub.web.dto.NewsResponseDto.GetTopNewsResultDto;
+import com.recommender.newshub.web.dto.NewsResponseDto.GetFixedNewsResultDto;
 import com.recommender.newshub.web.dto.common.ApiResponse;
 import com.recommender.newshub.web.dto.enums.ControllerNewsCategory;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,10 +16,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,12 +27,13 @@ import java.util.List;
 public class NewsController {
 
     private final NewsQueryService newsQueryService;
+    private final RecommenderService recommenderService;
 
     @GetMapping("/top")
     @Operation(summary = "카테고리별 주요 뉴스 기사 조회 API")
-    public ApiResponse<GetTopNewsResultDto> getTopNews(@RequestParam ControllerNewsCategory category) {
+    public ApiResponse<GetFixedNewsResultDto> getTopNews(@RequestParam ControllerNewsCategory category) {
         List<News> topNewsList = newsQueryService.getTopNews(category);
-        return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetTopNewsResultDto(topNewsList));
+        return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetFixedNewsResultDto(topNewsList));
     }
 
     @GetMapping("/search")
@@ -49,5 +50,12 @@ public class NewsController {
                                                          @PageCheck Integer page) {
         Page<News> categoryNews = newsQueryService.getCategoryNews(category, page);
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetNewsResultDto(categoryNews));
+    }
+
+    @GetMapping("/recommended")
+    @Operation(summary = "추천 뉴스 기사 조회 API")
+    public ApiResponse<GetFixedNewsResultDto> getRecommendedNews(@SessionAttribute(name = SessionConst.USER) User user) {
+        List<News> recommendedNews = recommenderService.getRecommendedNews(user);
+        return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetFixedNewsResultDto(recommendedNews));
     }
 }

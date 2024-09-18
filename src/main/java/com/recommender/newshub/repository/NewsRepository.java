@@ -19,4 +19,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
 
     @Query("SELECT n FROM News n WHERE n.category IN :categories ORDER BY n.publishDate DESC" )
     Page<News> findByCategories(@Param("categories") List<NewsCategory> categories, Pageable pageable);
+
+    List<News> findByIdIn(List<Long> ids);
 }

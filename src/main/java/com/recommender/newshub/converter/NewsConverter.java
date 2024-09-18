@@ -4,7 +4,7 @@ import com.recommender.newshub.domain.News;
 import com.recommender.newshub.domain.enums.NewsCategory;
 import com.recommender.newshub.web.dto.NewsApiDto.NewsDetailDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.GetNewsResultDto;
-import com.recommender.newshub.web.dto.NewsResponseDto.GetTopNewsResultDto;
+import com.recommender.newshub.web.dto.NewsResponseDto.GetFixedNewsResultDto;
 import com.recommender.newshub.web.dto.NewsResponseDto.NewsDto;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -30,12 +30,12 @@ public class NewsConverter {
                 .build();
     }
 
-    public static GetTopNewsResultDto toGetTopNewsResultDto(List<News> newsList) {
+    public static GetFixedNewsResultDto toGetFixedNewsResultDto(List<News> newsList) {
         List<NewsDto> newsDtoList = newsList.stream()
                 .map(NewsConverter::toNewsDto)
                 .toList();
 
-        return new GetTopNewsResultDto(newsDtoList.size(), newsDtoList);
+        return new GetFixedNewsResultDto(newsDtoList.size(), newsDtoList);
     }
 
     public static GetNewsResultDto toGetNewsResultDto(Page<News> newsPage) {
