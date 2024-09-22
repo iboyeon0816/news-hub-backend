@@ -53,9 +53,10 @@ public class NewsController {
     }
 
     @GetMapping("/recommended")
-    @Operation(summary = "추천 뉴스 기사 조회 API")
-    public ApiResponse<GetFixedNewsResultDto> getRecommendedNews(@SessionAttribute(name = SessionConst.USER) User user) {
-        List<News> recommendedNews = recommenderService.getRecommendedNews(user);
+    @Operation(summary = "카테고리별 추천 뉴스 기사 조회 API")
+    public ApiResponse<GetFixedNewsResultDto> getRecommendedNews(@RequestParam ControllerNewsCategory category,
+                                                                 @SessionAttribute(name = SessionConst.USER) User user) {
+        List<News> recommendedNews = recommenderService.getRecommendedNews(category, user);
         return ApiResponse.onSuccess(HttpStatus.OK, NewsConverter.toGetFixedNewsResultDto(recommendedNews));
     }
 }

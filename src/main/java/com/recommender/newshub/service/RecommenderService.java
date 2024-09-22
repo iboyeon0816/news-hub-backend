@@ -7,6 +7,7 @@ import com.recommender.newshub.exception.ex.UserClickHistoryNotFoundException;
 import com.recommender.newshub.repository.NewsClickLogRepository;
 import com.recommender.newshub.repository.NewsRepository;
 import com.recommender.newshub.web.dto.RecommenderDto.RecommendedNewsDto;
+import com.recommender.newshub.web.dto.enums.ControllerNewsCategory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -38,10 +39,10 @@ public class RecommenderService {
         this.webClient = getWebClient();
     }
 
-    public List<News> getRecommendedNews(User user) {
+    public List<News> getRecommendedNews(ControllerNewsCategory category, User user) {
         validateUserClickHistory(user);
 
-        String uri = buildRecommendedNewsUri(user.getId());
+        String uri = buildRecommendedNewsUri(category.toString(), user.getId());
         RecommendedNewsDto recommendedNewsDto = callRecommenderApi(uri);
 
         return newsRepository.findByIdIn(recommendedNewsDto.getRecommendedNewsIds());
@@ -64,8 +65,9 @@ public class RecommenderService {
                 .build();
     }
 
-    private static String buildRecommendedNewsUri(Long userId) {
+    private static String buildRecommendedNewsUri(String category, Long userId) {
         return UriComponentsBuilder.fromPath(RECOMMENDED_NEWS_PATH)
+                .queryParam("category", category)
                 .queryParam("user_id", userId)
                 .build().toUriString();
     }
